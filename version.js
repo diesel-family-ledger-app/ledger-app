@@ -1,6 +1,8 @@
 // The page's version. When the page changes, add a new entry at the top: a higher number, the date, and what changed.
 // The exact time shown next to the version is read from GitHub: when this file was last uploaded.
 window.LEDGER_VERSION = [
+  { version: "1.7", date: "2026-09-28", changes: [
+    "Wording now matches the near-instant behaviour: sending, confirming and budget uploads say 'within a minute or two', not 'within the hour'." ] },
   { version: "1.6", date: "2026-09-25", changes: [
     "Sending a payment or request now asks the ledger to update within about a minute, instead of waiting for the next hour.",
     "Veronica can confirm or reject payments from her key, the same as Howard." ] },

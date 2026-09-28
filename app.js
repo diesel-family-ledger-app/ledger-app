@@ -243,7 +243,7 @@ function whoAmI() {
 }
 
 function viewStatement(d) {
-  if (!d) return `<div class="panel"><p class="empty">The statement isn't ready yet. It appears within the hour after setup.</p></div>`;
+  if (!d) return `<div class="panel"><p class="empty">The statement isn't ready yet. It appears within a minute or two after setup.</p></div>`;
   let h = `<div class="pagehead"><h2>${esc(d.entity)}</h2><span class="meta">Updated ${dLabel(d.updated)}</span></div>`;
   if (d.loan) {
     const s = d.loan.state, t = d.loan.terms, ym = d.updated.slice(0, 7);
@@ -276,7 +276,7 @@ function viewPayments() {
   const due = loan ? loan.state.due_now_cents / 100 : "";
   const month = loan ? (today().slice(0, 7) < loan.terms.first_due ? loan.terms.first_due : today().slice(0, 7)) : today().slice(0, 7);
   return `<div class="panel"><h3>Send a payment</h3>
-    <p class="help">Attach the bank's proof of payment. It counts once ${esc(st.lenders || "Howard")} confirms it, usually within a day. You can pay more than the monthly amount: the extra shortens the loan.</p>
+    <p class="help">Attach the bank's proof of payment. It counts once ${esc(st.lenders || "Howard")} confirms it, usually within a minute or two. You can pay more than the monthly amount: the extra shortens the loan.</p>
     ${loan ? `<form class="f" data-form="payment">
       <label>For month<input type="month" name="month" required value="${month}"></label>
       <label>Amount paid (R)<input type="number" name="amount" min="1" step="0.01" required value="${due}"></label>
@@ -287,12 +287,12 @@ function viewPayments() {
   <div class="panel"><h3>What you've sent</h3>${subs.length ? `<div class="scroll"><table class="t"><thead><tr><th>Month</th><th class="n">Amount</th><th>Sent by</th><th>Status</th></tr></thead><tbody>
     ${subs.map(([id, s]) => `<tr><td>${ymLabel(s.month) || "—"}</td><td class="n">${s.amount_cents ? R(s.amount_cents) : "—"}</td><td>${esc(s.sent_by || "")}</td>
       <td>${pill({ pending: "pending", confirmed: "ok", rejected: "bad", reversed: "off", problem: "bad" }[s.status] || "pending", { pending: "Waiting", confirmed: "Confirmed", rejected: "Rejected", reversed: "Reversed", problem: "Needs fixing" }[s.status] || s.status)}<div class="note">${esc(s.message)}</div></td></tr>`).join("")}
-  </tbody></table></div>` : `<p class="empty">Nothing sent yet.</p>`}<p class="note">This list updates within the hour.</p></div>`;
+  </tbody></table></div>` : `<p class="empty">Nothing sent yet.</p>`}<p class="note">This list updates within a minute or two.</p></div>`;
 }
 
 function viewBudget(sm, editable) {
   let h = "";
-  if (editable) h += `<div class="panel"><h3>Your budget workbook</h3><p class="help">Keep <b>Budget.xlsx</b> on your phone or computer in Excel. When you change it, upload it here. The summary updates within the hour.</p>
+  if (editable) h += `<div class="panel"><h3>Your budget workbook</h3><p class="help">Keep <b>Budget.xlsx</b> on your phone or computer in Excel. When you change it, upload it here. The summary updates within a minute or two.</p>
     <div class="row"><button type="button" class="btn ghost" data-act="download-budget">Download the current workbook</button>
       <a class="btn ghost" href="budget-tracker.xlsx" download="Family budget tracker.xlsx">Download the blank tracker</a></div>
     <p class="note" style="margin-top:8px">Use the tracker's layout: the page reads its Summary tab. A workbook laid out differently can't be read.</p>
@@ -388,7 +388,7 @@ document.addEventListener("click", async ev => {
   if (a === "decide") {
     b.disabled = true;
     try { await writeFile(S.own.token, S.own.payments, `decisions/${b.dataset.id}.json`, jsonB64({ decision: b.dataset.decision, decided_by: store.me, at: new Date().toISOString() }), "Decision on access request");
-      flash(b.dataset.decision === "approve" ? "Approved. Howard will set it up within a day." : "Declined."); }
+      flash(b.dataset.decision === "approve" ? "Approved. It updates within a minute or two." : "Declined. It updates within a minute or two."); }
     catch (e) { flash(e.message, true); }
     return load();
   }
@@ -434,7 +434,7 @@ document.addEventListener("submit", async ev => {
       const file = fd.get("book");
       if (!file || !file.size || !/\.xlsx$/i.test(file.name)) throw new Error("Choose the .xlsx workbook.");
       await writeFile(S.own.token, S.own.budget, "Budget.xlsx", await fileB64(file), "Update budget workbook");
-      flash("Uploaded. The summary updates within the hour.");
+      flash("Uploaded. The summary updates within a minute or two.");
     }
     if (k === "request") {
       const sections = fd.getAll("sections");
